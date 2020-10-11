@@ -1,5 +1,4 @@
 import React from 'react';
-import { Button } from 'reactstrap';
 
 import MoviesCards from './components/MoviesCards';
 
@@ -11,7 +10,6 @@ function App() {
 
   return (
     <div className="App">
-      <Button> Clique moi </Button>
       <MoviesCards />
     </div>
   );

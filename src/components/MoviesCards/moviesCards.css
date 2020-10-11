@@ -1,0 +1,79 @@
+.categories{
+    margin:auto;
+}
+
+#moviesCards{
+    margin-left: 20px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 20px;
+    justify-items: center;
+} 
+
+.movieCard{
+    width: 70%;
+}
+
+.card-body{
+    font-size: x-small;
+}
+
+.iconButtons{
+    margin-top: 10px;
+}
+
+#categoriesSelect{
+    width: 20%;
+    font-size: 12px;
+    text-align-last: center;
+    margin:auto;
+}
+
+.pagination{
+    justify-content: center;
+}
+
+#maxMoviesCards{
+    text-align: -webkit-center;
+}
+
+#nbMoviesCards{
+    width: 15%;
+    text-align-last: center;
+}
+
+@media(min-width: 703px){
+    div#moviesCards{
+        margin-left: 20px;
+        display: grid;
+        grid-gap: 20px;
+    } 
+
+
+}
+
+@media(max-width: 702px){
+    div#moviesCards{
+        margin-left: 20px;
+        display: grid;
+        grid-gap: 20px;
+        grid-template-columns: repeat(2, 1fr);
+        margin: 10px;
+    }
+
+    #categoriesSelect{
+        width: 30%;
+        margin: auto;
+    }
+
+    #iconButtons{
+
+        display: flex;
+        margin: auto;
+        justify-content: center;
+    }
+
+    .card-body{
+        font-size: 9px;
+    }
+}

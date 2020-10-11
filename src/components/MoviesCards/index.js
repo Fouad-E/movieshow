@@ -1,3 +1,3 @@
-import MoviesCards from './MoviesCards';
+import MoviesCardsClass from './MoviesCardsClass';
 
-export default MoviesCards;
+export default MoviesCardsClass;

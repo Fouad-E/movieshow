@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardImg, CardBody, CardTitle, Button, CardSubtitle} from 'reactstrap';
-import { BiLike, BiDislike} from 'react-icons/bi';
+import { BiLike, BiDislike, BiMessageSquareError} from 'react-icons/bi';
 import { RiDeleteBin5Line } from 'react-icons/ri';
 import { FcLike, FcDislike } from 'react-icons/fc';
 
@@ -8,23 +8,37 @@ import { FcLike, FcDislike } from 'react-icons/fc';
 import { movies$ } from '../../data/movies';
 import imageMovie from '../../images/imageMovie.png';
 
+import './moviesCards.css';
+
 const MoviesCards = (props) => {
     
     const [movies, setMovies] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [moviesByCategory, setMoviesByCategory] = useState([]); 
     const [ likedMovies, setLinkedMovies] = useState([]);
+    const [categoryChoosen, setCategoryChoosen] = useState("All");
+
     useEffect(() => {
+        let mounted = true;
+
         movies$.then(movies => {
-            setMovies(movies);
-            console.log("Movies : ", movies);
-
             movies.forEach(movie => {
-                likedMovies[movie.id] = true
+                movie.isLinked = true;
+                if(!categories.includes(movie.category)){
+                    categories.push(movie.category);
+                    setCategories(categories);
+                }
             });
-            setLinkedMovies(likedMovies);
-            console.log("Linked movies : ", likedMovies);
-        })
+            setMovies(movies);
+            setMoviesByCategory(movies);
 
-    });
+            console.log("Movies : ", movies);
+            console.log("category movies : ", categories);
+
+        })
+        return () => mounted = false;
+
+    }, []);
 
     function removeMovie(movie){
         for(var i=0; i<movies.length; i++){
@@ -39,20 +53,45 @@ const MoviesCards = (props) => {
     function handleLikeMovie(movie){
         movies.forEach(movieElement => {
             if(movieElement.id === movie.id){
-                likedMovies[movie.id] = !likedMovies[movie.id];
+                movie.isLinked = !movie.isLinked;
                 console.log("Like movie indexed modified !!", movieElement);
             }            
         });
-        setLinkedMovies(likedMovies);
-        console.log("Like movies mis à jour après click: ", likedMovies);
+        setMovies(movies);
+        console.log("Like movies mis à jour après click: ", movies);
     }
 
 
+    function handleChangeCategory(e) {
+        setCategoryChoosen(e.target.value);
+        console.log("Catehory choosen : ", categoryChoosen);
+
+        let moviesByCategory = [];
+        movies.forEach((movie) => {
+            if(movie.category === e.target.value){
+                moviesByCategory.push(movie);
+            }
+        })
+        setMoviesByCategory(moviesByCategory);
+    }
+
     return(
         <div>
+            <label for="movie-select">Choose a category of movies :</label>
+
+            <select name="movies" id="movie-select" onChange={handleChangeCategory}>
+                <option value="All">All</option>
+                {
+                    categories.map((category) => 
+                        <option value={category}>{category}</option>
+                    )
+                }
+            </select>
+
+            <div id="moviesCards">
             {
                 movies.map((movie) => 
-                <Card key={movie.id}>
+                <Card key={movie.id} className="movieCard">
                     <CardImg top width="100%" src={imageMovie} alt="Image movie" />
                     <CardBody>
                         <CardTitle className="titleMovie"> {movie.title} </CardTitle>
@@ -60,10 +99,11 @@ const MoviesCards = (props) => {
                         <BiLike /> {movie.likes}
                         &nbsp; | &nbsp;
                         <BiDislike /> {movie.dislikes}
-                        
+                        &nbsp;
                         <Button onClick={() => handleLikeMovie(movie)}>
-                            { likedMovies[movie.id] ? <FcLike/> : <FcDislike/> }
+                            { movie.isLinked ? <FcLike/> : <FcDislike /> }
                         </Button>
+                        &nbsp;
                         <Button onClick={() => removeMovie(movie)}>
                             <RiDeleteBin5Line />
                         </Button>
@@ -71,6 +111,8 @@ const MoviesCards = (props) => {
                 </Card>
                 )
             }
+            </div>
+
         </div>
     );
 }
